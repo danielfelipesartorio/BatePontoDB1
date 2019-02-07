@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#831919</color>
+    <color name="colorAccent">#C2C2C2</color>
+
+    <color name="VermelhoDB1">#bd4f4a</color>
+    <color name="VermelhoEscuroDB1">#82322f</color>
+
+    <color name="azul">#303F9F</color>
+
+
+</resources>

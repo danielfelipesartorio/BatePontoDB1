@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:enterFadeDuration="@android:integer/config_shortAnimTime"
+    android:exitFadeDuration="@android:integer/config_shortAnimTime">
+    <item android:state_pressed="true" >
+        <shape>
+            <gradient
+                android:startColor="@color/VermelhoDB1"
+                android:endColor="@color/VermelhoEscuroDB1"
+                android:angle="270"/>
+            <corners
+                android:radius="16dp"/>
+        </shape>
+    </item>
+    <item android:state_pressed="false" >
+        <shape>
+            <gradient
+                android:startColor="@color/VermelhoEscuroDB1"
+                android:endColor="@color/VermelhoDB1"
+                android:angle="270" />
+            <corners
+                android:radius="16dp"/>
+        </shape>
+    </item>
+    <item android:state_checked="true">
+        <color android:color="#000000"/>
+    </item>
+</selector>

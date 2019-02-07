@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/gradiente">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registro realizado com sucesso"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textAlignment="center"
+            android:padding="16dp"/>
+</FrameLayout>
