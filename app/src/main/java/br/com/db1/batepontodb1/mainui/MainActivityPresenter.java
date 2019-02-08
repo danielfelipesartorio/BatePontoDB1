@@ -1,9 +1,9 @@
 package br.com.db1.batepontodb1.mainui;
 
 import br.com.db1.batepontodb1.data.PontoDataManager;
-import br.com.db1.batepontodb1.data.utils.UrlRequestCallbackInterface;
+import br.com.db1.batepontodb1.data.utils.UrlHistoryCallbackInterface;
 
-public class MainActivityPresenter implements UrlRequestCallbackInterface {
+public class MainActivityPresenter implements UrlHistoryCallbackInterface {
     private PontoDataManager pontoDataManager;
     private MainActivityInterface mainActivityInterface;
 
@@ -13,11 +13,11 @@ public class MainActivityPresenter implements UrlRequestCallbackInterface {
     }
 
     void validate(String user, String pass){
-        pontoDataManager.UrlRequest(user,pass,this);
+        pontoDataManager.UrlHistory(user,pass,this);
     }
 
     @Override
-    public void UrlRequestCallback(Boolean success, String[]  s) {
+    public void UrlRequestCallback(Boolean success, String  s) {
         if (success){
             mainActivityInterface.loginSuccess(s);
         } else{

@@ -10,10 +10,11 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import br.com.db1.batepontodb1.data.PontoDataManager;
+import br.com.db1.batepontodb1.data.utils.CountString;
 import br.com.db1.batepontodb1.data.utils.UrlRegisterCallbackInterface;
-import br.com.db1.batepontodb1.data.utils.UrlRequestCallbackInterface;
+import br.com.db1.batepontodb1.data.utils.UrlHistoryCallbackInterface;
 
-public class SecondActivityPresenter implements UrlRegisterCallbackInterface, UrlRequestCallbackInterface {
+public class SecondActivityPresenter implements UrlRegisterCallbackInterface, UrlHistoryCallbackInterface {
     private SecondActivityInterface secondActivityInterface;
     private PontoDataManager pontoDataManager;
     private String user,password;
@@ -74,25 +75,57 @@ public class SecondActivityPresenter implements UrlRegisterCallbackInterface, Ur
         pontoDataManager.UrlRegister(this.user,this.password,this);
     }
 
+    public String[] getAllMarkingsFromHTMLResponse(String htmlResponse){
+        return getAllMarkings(htmlResponse);
+    }
+
     @Override
     public void Successful(boolean success) {
         if (success){
             secondActivityInterface.successMsg();
-            pontoDataManager.UrlRequest(user,password,this);
+            pontoDataManager.UrlHistory(user,password,this);
         }else{
             secondActivityInterface.error();
         }
     }
 
     @Override
-    public void UrlRequestCallback(Boolean success, String[] s) {
+    public void UrlRequestCallback(Boolean success, String s) {
         if (success){
-            secondActivityInterface.updateMarkings(s);
+            String[]  allMarkings;
+            allMarkings = getAllMarkingsFromHTMLResponse(s);
+            secondActivityInterface.updateMarkings(allMarkings);
         } else {
             secondActivityInterface.error();
         }
     }
     @Override
     public void loading(boolean loadingStatus) {
+    }
+    public String[] getAllMarkings(String s){
+        //String today = DateFormat.format("dd/MM/yyyy",new Date()).toString();
+        //String today = "01/02/2019";
+        int numOfOccurrences = CountString.CountStringChaveDeSeg(s);
+        if (numOfOccurrences==0){
+            return null;
+        }
+        String[] result = new String[numOfOccurrences];
+        String day;
+        String time;
+        int count=0;
+
+        while (s.contains("<td>Data: </td>")){
+            int dayindex =  s.indexOf("<td>Data: </td>");
+            day = s.substring(dayindex+41,dayindex+51);
+            s=s.replaceFirst("<td>Data: </td>","");
+
+            int timeindex= s.indexOf("&nbsp; Hora: ");
+            time = s.substring(timeindex+13, timeindex+18);
+            s=s.replaceFirst("&nbsp; Hora: ","");
+
+            result[count] = day + "\n"+time;
+            count++;
+        }
+        return result;
     }
 }

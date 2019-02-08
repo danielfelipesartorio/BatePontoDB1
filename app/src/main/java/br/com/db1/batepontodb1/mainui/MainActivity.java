@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 import br.com.db1.batepontodb1.R;
 import br.com.db1.batepontodb1.data.utils.HideKeyboard;
+import br.com.db1.batepontodb1.data.utils.HtmlResponseCache;
 import br.com.db1.batepontodb1.data.utils.Mask;
 import br.com.db1.batepontodb1.secondui.SecondActivity;
 import io.reactivex.Observable;
@@ -41,6 +43,7 @@ public ImageView logodb1, edoilteam;
 public Context context;
 public SharedPreferences sharedPref;
 public CheckBox lembrarme;
+public TextView loginSuccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public CheckBox lembrarme;
         logodb1 = findViewById(R.id.logodb1);
         edoilteam = findViewById(R.id.edoil_team);
         lembrarme = findViewById(R.id.lembrar_me);
+        loginSuccess = findViewById(R.id.login_success);
 
         userCPF.addTextChangedListener(Mask.insert(Mask.CPF_MASK,userCPF));
 
@@ -65,6 +69,7 @@ public CheckBox lembrarme;
         userPassword.setText(sharedPref.getString("password",""));
         lembrarme.setChecked(sharedPref.getBoolean("lembrarme",false));
 
+        progressBar.setVisibility(View.INVISIBLE);
 
        Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
@@ -76,7 +81,6 @@ public CheckBox lembrarme;
                         Log.v("reste","click");
                     }
                 });
-
             }
         })
                .publish(new Function<Observable<Integer>, ObservableSource<List<Integer>>>() {
@@ -101,25 +105,16 @@ public CheckBox lembrarme;
                .observeOn(AndroidSchedulers.mainThread())
                .subscribe(new Observer<Integer>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
+                    public void onSubscribe(Disposable d) {}
                     @Override
                     public void onNext(Integer view) {
                         Log.v("reste","its alive!!!!!");
                         openEasterEgg();
                     }
-
                     @Override
-                    public void onError(Throwable e) {
-
-                    }
-
+                    public void onError(Throwable e) {}
                     @Override
-                    public void onComplete() {
-
-                    }
+                    public void onComplete() {}
                 });
 
     }
@@ -136,7 +131,7 @@ public CheckBox lembrarme;
     }
 
     @Override
-    public void loginSuccess(String[]  markings) {
+    public void loginSuccess(String  htmlResponse) {
         SharedPreferences.Editor editor=  sharedPref.edit();
         if (lembrarme.isChecked()){
             editor.putString("user",userCPF.getText().toString());
@@ -149,10 +144,16 @@ public CheckBox lembrarme;
         editor.apply();
 
         Intent intentToOpenSecondScreen = new Intent(this, SecondActivity.class);
-        intentToOpenSecondScreen.putExtra("markings",markings);
+        HtmlResponseCache htmlResponseCache = HtmlResponseCache.getInstance();
+        htmlResponseCache.setHtmlResponse(htmlResponse);
+
+        //intentToOpenSecondScreen.putExtra("markingsReference", htmlResponse);
         intentToOpenSecondScreen.putExtra("user",userCPF.getText().toString());
         intentToOpenSecondScreen.putExtra("pass",userPassword.getText().toString());
         startActivity(intentToOpenSecondScreen);
+        progressBar.setVisibility(View.INVISIBLE);
+        loginSuccess.setText("Login feito com sucesso");
+
     }
 
     @Override
@@ -169,8 +170,11 @@ public CheckBox lembrarme;
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.activity_tiozao);
         dialog.show();
+    }
 
-        //Intent intentToOpenEdoilTeam = new Intent(this, TiozaoActivity.class);
-        //startActivity(intentToOpenEdoilTeam);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loginSuccess.setText("");
     }
 }

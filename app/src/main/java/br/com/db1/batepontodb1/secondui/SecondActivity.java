@@ -17,6 +17,7 @@ import android.widget.Toast;
 import java.text.DecimalFormat;
 
 import br.com.db1.batepontodb1.R;
+import br.com.db1.batepontodb1.data.utils.HtmlResponseCache;
 import br.com.db1.batepontodb1.mainui.MarkingsListAdapter;
 
 public class SecondActivity extends AppCompatActivity implements SecondActivityInterface{
@@ -25,7 +26,7 @@ public class SecondActivity extends AppCompatActivity implements SecondActivityI
     private ProgressBar mTimeWorked;
     private ImageView status;
     private TextView jornada;
-    private String user,password;
+    private String user,password,htmlResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +40,12 @@ public class SecondActivity extends AppCompatActivity implements SecondActivityI
 
         presenter = new SecondActivityPresenter(this);
 
-        String[] markings = getIntent().getStringArrayExtra("markings");
+        //htmlResponse = getIntent().getStringExtra("markings");
         user = getIntent().getStringExtra("user");
         password = getIntent().getStringExtra("pass");
+        HtmlResponseCache htmlResponseCache = HtmlResponseCache.getInstance();
+        htmlResponse= htmlResponseCache.getHtmlResponse();
+        String[] markings =presenter.getAllMarkingsFromHTMLResponse(htmlResponse);
         updateMarkings(markings);
     }
 
