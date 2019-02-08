@@ -131,6 +131,7 @@ public CheckBox lembrarme;
 
     @Override
     public void loginError() {
+        showLoading(false);
         Toast.makeText(getApplicationContext(), "Erro", Toast.LENGTH_SHORT).show();
     }
 

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">BatePontoDB1</string>
-    <string name="jornada">Jornada cumprida até o montento: %1$s</string>
+    <string name="jornada">Jornada cumprida até o momento: %1$s</string>
     <string name="c_p_f">C.P.F.</string>
     <string name="senha">Senha</string>
     <string name="fazer_login">FAZER LOGIN</string>
