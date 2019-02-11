@@ -7,7 +7,7 @@
             <gradient
                 android:startColor="@color/VermelhoDB1"
                 android:endColor="@color/VermelhoEscuroDB1"
-                android:angle="270"/>
+                android:angle="90"/>
             <corners
                 android:radius="16dp"/>
         </shape>
@@ -17,7 +17,7 @@
             <gradient
                 android:startColor="@color/VermelhoEscuroDB1"
                 android:endColor="@color/VermelhoDB1"
-                android:angle="270" />
+                android:angle="90" />
             <corners
                 android:radius="16dp"/>
         </shape>

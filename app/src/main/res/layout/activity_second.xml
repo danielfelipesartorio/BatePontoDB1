@@ -6,10 +6,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradiente"
-    android:backgroundTint="@color/colorAccent"
+    android:backgroundTint="@color/VermelhoEscuroDB1"
     android:backgroundTintMode="multiply"
     android:orientation="vertical">
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+<android.support.v7.widget.LinearLayoutCompat
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
+<android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="8dp"
+    android:layout_margin="8dp"
+    android:elevation="8dp">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,20 +32,29 @@
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
+</android.support.v7.widget.CardView>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/markings_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"/>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardBackgroundColor="@color/VermelhoEscuroDB1"
-        app:cardCornerRadius="8dp">
-
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        app:cardBackgroundColor="@color/White"
+        app:cardCornerRadius="8dp"
+        android:elevation="8dp">
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="8dp">
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -48,7 +71,7 @@
                 android:layout_marginRight="8dp"
                 android:layout_weight="2"
                 android:text="@string/jornada"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 app:layout_constraintEnd_toStartOf="@+id/legenda_atuando"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -61,7 +84,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:text="@string/atuando"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 app:layout_constraintBottom_toBottomOf="@+id/jornada_cumprida"
                 app:layout_constraintEnd_toStartOf="@+id/atuando"
                 app:layout_constraintTop_toTopOf="@+id/jornada_cumprida" />
@@ -94,31 +117,45 @@
                 app:layout_constraintTop_toBottomOf="@id/jornada_cumprida"
                 tools:layout_editor_absoluteX="16dp" />
         </android.support.constraint.ConstraintLayout>
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/registrar_ponto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/animationbutton"
+            android:onClick="registrarPonto"
+            android:padding="24dp"
+            android:text="@string/registrar_ponto"
+            android:textColor="@color/White" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/task_web"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/animationbutton"
+            android:onClick="openTaskButtonClick"
+            android:padding="24dp"
+            android:text="@string/task_web"
+            android:textColor="@color/White" />
+            <ImageView
+                android:contentDescription="@string/logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:src="@drawable/db1logocolorida"
+                android:padding="8dp"/>
+
+        </android.support.v7.widget.LinearLayoutCompat>
 
     </android.support.v7.widget.CardView>
 
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/registrar_ponto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@drawable/animationbutton"
-        android:onClick="registrarPonto"
-        android:padding="24dp"
-        android:text="@string/registrar_ponto"
-        android:textColor="@color/colorAccent" />
 
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/task_web"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@drawable/animationbutton"
-        android:onClick="openTaskButtonClick"
-        android:padding="24dp"
-        android:text="@string/task_web"
-        android:textColor="@color/colorAccent" />
+</android.support.v7.widget.LinearLayoutCompat>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </android.support.v7.widget.LinearLayoutCompat>

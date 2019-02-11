@@ -9,22 +9,24 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import br.com.db1.batepontodb1.data.PontoDataManager;
-import br.com.db1.batepontodb1.data.utils.CountString;
-import br.com.db1.batepontodb1.data.utils.UrlRegisterCallbackInterface;
-import br.com.db1.batepontodb1.data.utils.UrlHistoryCallbackInterface;
+import br.com.db1.batepontodb1.data.PontoManager;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
-public class SecondActivityPresenter implements UrlRegisterCallbackInterface, UrlHistoryCallbackInterface {
+class SecondActivityPresenter {
     private SecondActivityInterface secondActivityInterface;
-    private PontoDataManager pontoDataManager;
-    private String user,password;
+    private PontoManager pontoManager;
+    private CompositeDisposable compositeDisposable;
 
     SecondActivityPresenter(SecondActivityInterface secondActivityInterface){
         this.secondActivityInterface = secondActivityInterface;
-        pontoDataManager = new PontoDataManager();
+        pontoManager = new PontoManager();
+        compositeDisposable=new CompositeDisposable();
     }
 
-    double getTimeWorked(String[] s) {
+    int getTimeWorked(String[] s) {
         double timeWorked = 0;
         ArrayList<Double> todayMarkings = new ArrayList<>();
         Date now = Calendar.getInstance(TimeZone.getDefault()).getTime();
@@ -60,7 +62,7 @@ public class SecondActivityPresenter implements UrlRegisterCallbackInterface, Ur
                 break;
             }
         }
-        return timeWorked;
+        return (int) Math.ceil(timeWorked/8.8*100);
     }
 
     Intent openTaskWeb(){
@@ -70,62 +72,63 @@ public class SecondActivityPresenter implements UrlRegisterCallbackInterface, Ur
     }
 
     void register(String user, String password) {
-        this.user=user;
-        this.password = password;
-        pontoDataManager.UrlRegister(this.user,this.password,this);
+        compositeDisposable.add(
+                pontoManager.UrlRegister(user,password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(registerSuccess(), registerFailure())
+        );
+
     }
 
-    public String[] getAllMarkingsFromHTMLResponse(String htmlResponse){
-        return getAllMarkings(htmlResponse);
+    private Consumer<String> registerSuccess(){
+        return new Consumer<String>() {
+            @Override
+            public void accept(String strings) throws Exception {
+                secondActivityInterface.successMsg();
+            }
+        };
     }
 
-    @Override
-    public void Successful(boolean success) {
-        if (success){
-            secondActivityInterface.successMsg();
-            pontoDataManager.UrlHistory(user,password,this);
-        }else{
-            secondActivityInterface.error();
-        }
+    private Consumer<Throwable> registerFailure(){
+        return new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                secondActivityInterface.error();
+            }
+        };
     }
 
-    @Override
-    public void UrlRequestCallback(Boolean success, String s) {
-        if (success){
-            String[]  allMarkings;
-            allMarkings = getAllMarkingsFromHTMLResponse(s);
-            secondActivityInterface.updateMarkings(allMarkings);
-        } else {
-            secondActivityInterface.error();
-        }
+
+    void getNewMarkings(String user, String password) {
+        compositeDisposable.add(
+                pontoManager.UrlHistory(user,password)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(getNewMarkingsSuccess(), getNewMarkingsFailure())
+        );
+
     }
-    @Override
-    public void loading(boolean loadingStatus) {
+
+    private Consumer<String[]> getNewMarkingsSuccess(){
+        return new Consumer<String[]>() {
+            @Override
+            public void accept(String[] strings) throws Exception {
+                secondActivityInterface.updateMarkings(strings);
+            }
+        };
     }
-    public String[] getAllMarkings(String s){
-        //String today = DateFormat.format("dd/MM/yyyy",new Date()).toString();
-        //String today = "01/02/2019";
-        int numOfOccurrences = CountString.CountStringChaveDeSeg(s);
-        if (numOfOccurrences==0){
-            return null;
-        }
-        String[] result = new String[numOfOccurrences];
-        String day;
-        String time;
-        int count=0;
 
-        while (s.contains("<td>Data: </td>")){
-            int dayindex =  s.indexOf("<td>Data: </td>");
-            day = s.substring(dayindex+41,dayindex+51);
-            s=s.replaceFirst("<td>Data: </td>","");
+    private Consumer<Throwable> getNewMarkingsFailure(){
+        return new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                secondActivityInterface.error();
+            }
+        };
+    }
 
-            int timeindex= s.indexOf("&nbsp; Hora: ");
-            time = s.substring(timeindex+13, timeindex+18);
-            s=s.replaceFirst("&nbsp; Hora: ","");
-
-            result[count] = day + "\n"+time;
-            count++;
-        }
-        return result;
+    void clear(){
+        compositeDisposable.clear();
     }
 }

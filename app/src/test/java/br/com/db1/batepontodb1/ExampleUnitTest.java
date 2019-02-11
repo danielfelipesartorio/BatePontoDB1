@@ -2,7 +2,7 @@ package br.com.db1.batepontodb1;
 
 import org.junit.Test;
 
-import br.com.db1.batepontodb1.data.PontoDataManager;
+import br.com.db1.batepontodb1.data.PontoManager;
 
 import static org.junit.Assert.*;
 
@@ -20,8 +20,8 @@ public class ExampleUnitTest {
 
     @Test
     public void getTimeFromResponse(){
-        PontoDataManager pontoDataManager = new PontoDataManager();
-        String[] result = pontoDataManager.getAllMarkings("<!DOCTYPE html>\n" +
+        PontoManager pontoManager = new PontoManager();
+        String[] result = pontoManager.getAllMarkings("<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "<head>\n" +
                 "    <meta charset=\"utf-8\" />\n" +

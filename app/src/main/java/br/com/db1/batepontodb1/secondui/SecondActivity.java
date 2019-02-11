@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +18,7 @@ import android.widget.Toast;
 import java.text.DecimalFormat;
 
 import br.com.db1.batepontodb1.R;
-import br.com.db1.batepontodb1.data.utils.HtmlResponseCache;
+import br.com.db1.batepontodb1.data.PontoManager;
 import br.com.db1.batepontodb1.mainui.MarkingsListAdapter;
 
 public class SecondActivity extends AppCompatActivity implements SecondActivityInterface{
@@ -26,7 +27,9 @@ public class SecondActivity extends AppCompatActivity implements SecondActivityI
     private ProgressBar mTimeWorked;
     private ImageView status;
     private TextView jornada;
-    private String user,password,htmlResponse;
+    private String user,password;
+    private String[] markings;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,17 +40,22 @@ public class SecondActivity extends AppCompatActivity implements SecondActivityI
         mTimeWorked = findViewById(R.id.timeworked);
         status = findViewById(R.id.atuando);
         jornada = findViewById(R.id.jornada_cumprida);
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh);
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                presenter.getNewMarkings(user,password);
+            }
+        });
         presenter = new SecondActivityPresenter(this);
 
-        //htmlResponse = getIntent().getStringExtra("markings");
+        markings = getIntent().getStringArrayExtra("markings");
         user = getIntent().getStringExtra("user");
         password = getIntent().getStringExtra("pass");
-        HtmlResponseCache htmlResponseCache = HtmlResponseCache.getInstance();
-        htmlResponse= htmlResponseCache.getHtmlResponse();
-        String[] markings =presenter.getAllMarkingsFromHTMLResponse(htmlResponse);
         updateMarkings(markings);
     }
+
 
     @Override
     public void updateMarkings(String[] markings) {
@@ -58,9 +66,9 @@ public class SecondActivity extends AppCompatActivity implements SecondActivityI
         mMarkingsList.setLayoutManager(mMarkingsLayoutManager);
         mMarkingsList.setAdapter(mMarkingsAdapter);
 
-        int temp = (int) Math.ceil(presenter.getTimeWorked(markings)/8.8*100);
-        mTimeWorked.setProgress(temp);
+        mTimeWorked.setProgress(presenter.getTimeWorked(markings));
         mTimeWorked.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -86,6 +94,7 @@ public class SecondActivity extends AppCompatActivity implements SecondActivityI
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.popup_ok_registro);
             dialog.show();
+            presenter.getNewMarkings(user,password);
     }
 
     public void openTaskButtonClick(View view){
@@ -95,5 +104,11 @@ public class SecondActivity extends AppCompatActivity implements SecondActivityI
 
     public void registrarPonto(View view) {
         presenter.register(user,password);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.clear();
     }
 }
