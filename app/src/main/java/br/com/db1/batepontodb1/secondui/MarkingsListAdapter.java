@@ -1,7 +1,8 @@
-package br.com.db1.batepontodb1.mainui;
+package br.com.db1.batepontodb1.secondui;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,11 @@ import br.com.db1.batepontodb1.R;
 public class MarkingsListAdapter extends RecyclerView.Adapter<MarkingsListAdapter.MyViewHolder> {
     private String[] markings;
 
-    public MarkingsListAdapter (String[] markings){
+    void setMarkings(String[] markings){
+        this.markings = markings;
+    }
+
+    MarkingsListAdapter(String[] markings){
         this.markings=markings;
     }
 
@@ -26,8 +31,8 @@ public class MarkingsListAdapter extends RecyclerView.Adapter<MarkingsListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
-        myViewHolder.mTextViewMarking.setText(markings[i]);
-
+        myViewHolder.mTextViewMarking.setText(markings[i].substring(0,16));
+        myViewHolder.mTextViewCompany.setText(markings[i].substring(17));
     }
 
     @Override
@@ -36,10 +41,13 @@ public class MarkingsListAdapter extends RecyclerView.Adapter<MarkingsListAdapte
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView mTextViewMarking;
+        TextView mTextViewMarking,mTextViewCompany;
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
             mTextViewMarking = itemView.findViewById(R.id.markingTime);
+            mTextViewCompany = itemView.findViewById(R.id.markingCompany);
         }
     }
+
+
 }

@@ -25,10 +25,10 @@
     android:layout_margin="8dp"
     android:elevation="8dp">
     <TextView
+        android:id="@+id/titulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:text="@string/ultimas_marca_es"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -70,7 +70,6 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_weight="2"
-                android:text="@string/jornada"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 app:layout_constraintEnd_toStartOf="@+id/legenda_atuando"
                 app:layout_constraintStart_toStartOf="parent"
@@ -126,9 +125,9 @@
             android:layout_marginRight="8dp"
             android:background="@drawable/animationbutton"
             android:onClick="registrarPonto"
-            android:padding="24dp"
             android:text="@string/registrar_ponto"
-            android:textColor="@color/White" />
+            android:textColor="@color/White"
+            />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/task_web"
@@ -140,16 +139,42 @@
             android:layout_marginRight="8dp"
             android:background="@drawable/animationbutton"
             android:onClick="openTaskButtonClick"
-            android:padding="24dp"
             android:text="@string/task_web"
             android:textColor="@color/White" />
-            <ImageView
-                android:contentDescription="@string/logo"
+            <android.support.v7.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:src="@drawable/db1logocolorida"
-                android:padding="8dp"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:layout_margin="8dp">
+                <ImageView
+                    android:contentDescription="@string/logo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:src="@drawable/indicador"
+                    android:padding="8dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/n_o_esquece_o_task"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+            </android.support.v7.widget.LinearLayoutCompat>
+
+            <com.google.android.gms.ads.AdView
+                xmlns:ads="http://schemas.android.com/apk/res-auto"
+                ads:adUnitId="ca-app-pub-3940256099942544/6300978111"
+                ads:adSize="BANNER"
+                android:id="@+id/adview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <!--todo mudar ad id
+                my ad
+                ca-app-pub-3390552378240881~8359590534
+                test ad
+                ca-app-pub-3940256099942544/6300978111-->
+            </com.google.android.gms.ads.AdView>
 
         </android.support.v7.widget.LinearLayoutCompat>
 

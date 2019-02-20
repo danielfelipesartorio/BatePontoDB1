@@ -1,5 +1,7 @@
 package br.com.db1.batepontodb1.data;
 
+import android.util.Log;
+
 import java.io.IOException;
 
 import br.com.db1.batepontodb1.data.utils.CountString;
@@ -58,6 +60,20 @@ public class PontoManager {
         return "";
     }
 
+
+    public Observable<String> ValidateLogin(final String user, final String password){
+
+        return Observable.create(new ObservableOnSubscribe<String>() {
+
+            @Override
+            public void subscribe(ObservableEmitter<String> emitter) throws Exception {
+                emitter.onNext(OkHTTPUrlRequest (user,password,"1"));
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public Observable<String[]> UrlHistory(final String user, final String password){
 
         return Observable.create(new ObservableOnSubscribe<String>() {
@@ -69,12 +85,6 @@ public class PontoManager {
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                /*.filter(new Predicate<String>() {
-                    @Override
-                    public boolean test(String s) throws Exception {
-                        return s.contains("Chave de Seguran");
-                    }
-                })*/
                 .map(new Function<String, String[]>() {
                     @Override
                     public String[] apply(String s) throws Exception {
@@ -82,7 +92,7 @@ public class PontoManager {
                     }
                 });
     }
-//todo arrumar registro do ponto, registrou mas nao deu sucesso no observer
+
     public Observable<String> UrlRegister(final String user, final String password) {
         return Observable.create(new ObservableOnSubscribe<String>() {
 
@@ -98,39 +108,24 @@ public class PontoManager {
                     public boolean test(String s) throws Exception {
                         return s.contains("Chave de Seguran");
                     }
-                })
-                /*.map(new Function<String, String>() {
-                    @Override
-                    public String apply(String s) throws Exception {
-                        return OkHTTPUrlRequest (user,password,"1");
-                    }
-                })
-                .filter(new Predicate<String>() {
-                    @Override
-                    public boolean test(String s) throws Exception {
-                        return s.contains("Chave de Seguran");
-                    }
-                })
-                .map(new Function<String, String[]>() {
-                    @Override
-                    public String[] apply(String s) throws Exception {
-                        return getAllMarkings(s);
-                    }
-                })*/;
+                });
     }
     public String[] getAllMarkings(String s){
-        //String today = DateFormat.format("dd/MM/yyyy",new Date()).toString();
-        //String today = "01/02/2019";
         int numOfOccurrences = CountString.CountStringChaveDeSeg(s);
         if (numOfOccurrences==0){
             return null;
         }
-        String[] result = new String[numOfOccurrences];
+        int size = 12;
+        if (numOfOccurrences<size){
+            size = numOfOccurrences;
+        }
+        String[] result = new String[size];
         String day;
         String time;
+        String empresa;
         int count=0;
 
-        while (s.contains("<td>Data: </td>")){
+        while (s.contains("<td>Data: </td>")&&count<12){
             int dayindex =  s.indexOf("<td>Data: </td>");
             day = s.substring(dayindex+41,dayindex+51);
             s=s.replaceFirst("<td>Data: </td>","");
@@ -139,7 +134,11 @@ public class PontoManager {
             time = s.substring(timeindex+13, timeindex+18);
             s=s.replaceFirst("&nbsp; Hora: ","");
 
-            result[count] = day + "\n"+time;
+            int empresaindex = s.indexOf("<td>Empresa: </td>");
+            int empresaindexfim = s.indexOf("</tr>",empresaindex);
+            empresa = s.substring(empresaindex+44, empresaindexfim-23);
+            s=s.replaceFirst("<td>Empresa: </td>","");
+            result[count] = day + "\n"+time+ "\n"+empresa;
             count++;
         }
         return result;

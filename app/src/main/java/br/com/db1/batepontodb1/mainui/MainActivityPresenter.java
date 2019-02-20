@@ -26,19 +26,19 @@ class MainActivityPresenter {
     void validate(String user, String pass){
         mainActivityInterface.showLoading(true);
         compositeDisposable.add(
-                pontoManager.UrlHistory(user,pass)
+                pontoManager.ValidateLogin(user,pass)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(validateSuccess(), validateFailure())
         );
     }
 
-    private Consumer<String[]> validateSuccess(){
-        return new Consumer<String[]>() {
+    private Consumer<String> validateSuccess(){
+        return new Consumer<String>() {
             @Override
-            public void accept(String[] strings) throws Exception {
-                if (strings!=null){
-                    mainActivityInterface.loginSuccess(strings);
+            public void accept(String strings) throws Exception {
+                if (strings.contains("Chave de Seguran")){
+                    mainActivityInterface.loginSuccess();
                 }else{
                     mainActivityInterface.loginError();
                 }

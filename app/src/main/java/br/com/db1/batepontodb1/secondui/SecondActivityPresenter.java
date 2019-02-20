@@ -2,7 +2,9 @@ package br.com.db1.batepontodb1.secondui;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -111,12 +113,14 @@ class SecondActivityPresenter {
     }
 
     private Consumer<String[]> getNewMarkingsSuccess(){
-        return new Consumer<String[]>() {
+
+        Consumer<String[]> consumer = new Consumer<String[]>() {
             @Override
             public void accept(String[] strings) throws Exception {
                 secondActivityInterface.updateMarkings(strings);
             }
         };
+        return consumer;
     }
 
     private Consumer<Throwable> getNewMarkingsFailure(){

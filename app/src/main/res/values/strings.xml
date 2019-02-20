@@ -1,14 +1,17 @@
 <resources>
-    <string name="app_name">BatePontoDB1</string>
+    <string name="app_name">Bate Ponto</string>
     <string name="jornada">Jornada cumprida até o momento: %1$s</string>
     <string name="c_p_f">C.P.F.</string>
     <string name="senha">Senha</string>
     <string name="fazer_login">FAZER LOGIN</string>
-    <string name="ultimas_marca_es">Ultimas marcações:</string>
+    <string name="ultimas_marca_es">Ultimas %1$d marcações:</string>
     <string name="atuando">Atuando:</string>
     <string name="registrar_ponto">REGISTRAR PONTO</string>
     <string name="task_web">TASK WEB</string>
     <string name="preference_file_key">br.com.db1.batepontodb1.PREFERENCE_FILE_KEY</string>
     <string name="logo">logo</string>
     <string name="lembrar_me">Lembrar-me</string>
+    <string name="adId">ca-app-pub-3390552378240881~8359590534</string>
+    <string name="interface_de_registro">Interface de registro de ponto eletronico no sistema Pontofopag</string>
+    <string name="n_o_esquece_o_task">Não esquece o Task</string>
 </resources>

@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         preference = PontoPreferenceHelperImpl.getPreferenceInstance(this.getApplicationContext());
         pontoPresenter = new MainActivityPresenter(this);
         setContentView(R.layout.activity_main);
@@ -91,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                 .map(new Function<List<Integer>, Integer>() {
                     @Override
                     public Integer apply(List<Integer> views) throws Exception {
-                        Log.v("reste","map");
                         return views.size();
                     }
                 })
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     }
 
     @Override
-    public void loginSuccess(final String[] allMarkings) {
+    public void loginSuccess() {
             if (rememberMe.isChecked()){
                 preference.saveUser(userCPF.getText().toString());
                 preference.savePassword(userPassword.getText().toString());
@@ -147,18 +147,18 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
-                openSecondActivity(allMarkings);
+                openSecondActivity();
             }
         }, 1000);   //5 seconds
 
     }
 
-    void openSecondActivity(String[] allMarkings){
+    void openSecondActivity(){
 
         Intent intentToOpenSecondScreen = new Intent(this, SecondActivity.class);
         intentToOpenSecondScreen.putExtra("user",userCPF.getText().toString());
         intentToOpenSecondScreen.putExtra("pass",userPassword.getText().toString());
-        intentToOpenSecondScreen.putExtra("markings",allMarkings);
+        //intentToOpenSecondScreen.putExtra("markings",allMarkings);
         startActivity(intentToOpenSecondScreen);
     }
 
